@@ -1,0 +1,132 @@
+// Sistem Manajemen Perpustakaan Digital
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== ENUMS ====================
+
+enum AdminRole {
+  SUPER_ADMIN
+  LIBRARIAN
+  ASSISTANT
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+
+// ==================== ADMIN ====================
+
+model Admin {
+  id           String     @id @default(cuid())
+  name         String
+  email        String     @unique
+  passwordHash String     @map("password_hash")
+  role         AdminRole  @default(LIBRARIAN)
+  status       UserStatus @default(ACTIVE)
+  lastLoginAt  DateTime?  @map("last_login_at")
+  lastLoginIp  String?    @map("last_login_ip")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  activityLogs ActivityLog[]
+
+  @@index([email])
+  @@index([status])
+  @@map("admins")
+}
+
+model Book {
+  id          String   @id @default(cuid())
+  title       String
+  author      String
+  isbn        String?  @unique
+  category    String
+  stock       Int      @default(0)
+  available   Int      @default(0)
+  publishedYear Int?
+  publisher   String?
+  description String?
+  coverImage  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  borrowings  Borrowing[]
+}
+
+model EBook {
+  id          String   @id @default(cuid())
+  title       String
+  author      String
+  category    String
+  isbn        String?  @unique
+  publishedYear Int?
+  publisher   String?
+  description String?
+  coverImage  String?
+  pdfPath     String
+  fileSize    Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Member {
+  id          String   @id @default(cuid())
+  name        String
+  email       String?  @unique
+  phone       String?
+  address     String?
+  memberId    String   @unique
+  joinDate    DateTime @default(now())
+  status      String   @default("active") // active, suspended
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  borrowings  Borrowing[]
+}
+
+model Borrowing {
+  id          String   @id @default(cuid())
+  bookId      String
+  memberId    String
+  borrowDate  DateTime @default(now())
+  dueDate     DateTime
+  returnDate  DateTime?
+  status      String   @default("borrowed") // borrowed, returned, overdue
+  fine        Float    @default(0)
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  book        Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  member      Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+}
+
+model ActivityLog {
+  id         String   @id @default(cuid())
+  adminId    String?  @map("admin_id")
+  adminName  String   @map("admin_name")
+  action     String   // create, update, delete
+  entityType String   @map("entity_type") // book, ebook, member, borrowing
+  entityId   String   @map("entity_id")
+  entityName String   @map("entity_name")
+  details    String?
+  ipAddress  String?  @map("ip_address")
+  userAgent  String?  @map("user_agent")
+  timestamp  DateTime @default(now())
+
+  admin Admin? @relation(fields: [adminId], references: [id], onDelete: SetNull)
+
+  @@index([adminId])
+  @@index([entityType])
+  @@index([timestamp])
+  @@map("activity_logs")
+}
