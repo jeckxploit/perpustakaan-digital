@@ -8,7 +8,7 @@ async function main() {
 
   // Check if admin already exists
   const existingAdmin = await prisma.admin.findUnique({
-    where: { email: 'admin@perpustakaan.com' }
+    where: { email: 'admin@library.com' }
   })
 
   if (existingAdmin) {
@@ -17,12 +17,12 @@ async function main() {
   }
 
   // Create default admin
-  const passwordHash = hashPassword('Admin@123')
+  const passwordHash = hashPassword('Admin123!')
 
   const admin = await prisma.admin.create({
     data: {
       name: 'Super Admin',
-      email: 'admin@perpustakaan.com',
+      email: 'admin@library.com',
       passwordHash,
       role: 'SUPER_ADMIN',
       status: 'ACTIVE'
@@ -37,8 +37,8 @@ async function main() {
   })
 
   console.log('\n📝 Login credentials:')
-  console.log('   Email: admin@perpustakaan.com')
-  console.log('   Password: Admin@123')
+  console.log('   Email: admin@library.com')
+  console.log('   Password: Admin123!')
 }
 
 main()
