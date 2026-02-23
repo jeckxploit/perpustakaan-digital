@@ -15,11 +15,40 @@ export interface AuthResult {
   }
 }
 
+// Hardcoded default credentials for production (SQLite on Vercel)
+const DEFAULT_CREDENTIALS = {
+  email: 'admin@library.com',
+  password: 'Admin123!',
+  name: 'Super Admin',
+  role: 'SUPER_ADMIN'
+}
+
 export class AuthService {
   /**
    * Authenticates an admin and returns a token
    */
   async login(dto: LoginDto, ipAddress?: string): Promise<AuthResult> {
+    // Check default credentials first (for production without database)
+    if (dto.email === DEFAULT_CREDENTIALS.email && dto.password === DEFAULT_CREDENTIALS.password) {
+      const token = generateToken({
+        adminId: 'default-admin',
+        email: DEFAULT_CREDENTIALS.email,
+        name: DEFAULT_CREDENTIALS.name,
+        role: DEFAULT_CREDENTIALS.role
+      })
+
+      return {
+        token,
+        admin: {
+          id: 'default-admin',
+          name: DEFAULT_CREDENTIALS.name,
+          email: DEFAULT_CREDENTIALS.email,
+          role: DEFAULT_CREDENTIALS.role
+        }
+      }
+    }
+
+    // Fallback to database for other users
     const admin = await prisma.admin.findUnique({
       where: { email: dto.email }
     })
