@@ -27,6 +27,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { ProfessionalStatCard } from '@/components/professional/ProfessionalStatCard'
 import { ProfessionalEmptyState } from '@/components/professional/ProfessionalEmptyState'
 import { ProfessionalSkeleton } from '@/components/professional/ProfessionalSkeleton'
+import { ResponsiveHeader } from '@/components/ResponsiveHeader'
 
 // Types
 interface Book {
@@ -483,60 +484,39 @@ export default function LibraryManagement() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <BookOpen className="h-7 w-7 text-blue-600 dark:text-blue-400" />
-              <div>
-                <h1 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-                  Perpustakaan Digital
-                </h1>
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">Sistem Manajemen Perpustakaan</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="hidden md:flex items-center gap-3 text-sm border-l-2 border-neutral-300 dark:border-neutral-700 pl-3">
-                <span className="text-neutral-700 dark:text-neutral-300 font-medium">
-                  {admin?.name}
-                </span>
-                <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 text-xs font-medium uppercase rounded">
-                  {admin?.role}
-                </span>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                title="Toggle theme"
-                className="hover:bg-neutral-100 dark:hover:bg-neutral-800"
-              >
-                <Sun className="h-5 w-5 dark:hidden" />
-                <Moon className="h-5 w-5 hidden dark:block" />
-                <span className="sr-only">Toggle theme</span>
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => logout()}
-                title="Logout"
-                className="hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400"
-              >
-                <LogOut className="h-5 w-5" />
-                <span className="sr-only">Logout</span>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Responsive Header */}
+      <ResponsiveHeader activeTab={activeTab} onTabChange={setActiveTab} />
 
       {/* Main Content */}
-      <main className="flex-1 container mx-auto px-6 py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-          {/* Tab Navigation */}
-          <TabsList className="w-full">
-            <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-1 overflow-x-auto">
+      <main className="flex-1 container mx-auto px-4 sm:px-6 py-4 sm:py-8">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-8">
+          {/* Tab Navigation - Mobile Horizontal Scroll */}
+          <TabsList className="w-full bg-transparent p-0 h-auto">
+            <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-1.5 overflow-x-auto mobile-only">
+              {[
+                { value: 'dashboard', label: 'Beranda', icon: LayoutDashboard },
+                { value: 'books', label: 'Buku', icon: Book },
+                { value: 'members', label: 'Anggota', icon: Users },
+                { value: 'borrowings', label: 'Peminjaman', icon: Calendar },
+                { value: 'ebooks', label: 'E-book', icon: FileText },
+                { value: 'reports', label: 'Laporan', icon: BarChart3 },
+              ].map((tab) => (
+                <TabsTrigger
+                  key={tab.value}
+                  value={tab.value}
+                  className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-md transition-all duration-200 text-xs font-medium whitespace-nowrap min-h-[40px] min-w-[44px] ${
+                    activeTab === tab.value
+                      ? 'bg-blue-600 text-white shadow-md'
+                      : 'bg-transparent text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
+                  }`}
+                >
+                  <tab.icon className="h-4 w-4" />
+                  <span>{tab.label}</span>
+                </TabsTrigger>
+              ))}
+            </div>
+            {/* Desktop Tab Navigation */}
+            <div className="hidden sm:flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-1 overflow-x-auto">
               {[
                 { value: 'dashboard', label: 'Beranda', icon: LayoutDashboard },
                 { value: 'books', label: 'Buku', icon: Book },
@@ -555,39 +535,39 @@ export default function LibraryManagement() {
                   }`}
                 >
                   <tab.icon className="h-4 w-4" />
-                  <span className="hidden md:inline">{tab.label}</span>
+                  <span>{tab.label}</span>
                 </TabsTrigger>
               ))}
             </div>
           </TabsList>
 
           {/* Dashboard Tab */}
-          <TabsContent value="dashboard" className="space-y-6">
-            {/* Quick Actions Bar */}
+          <TabsContent value="dashboard" className="space-y-4 sm:space-y-6">
+            {/* Quick Actions Bar - Responsive */}
             <Card className="border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-secondary/5">
               <CardContent className="pt-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                   <Button
                     onClick={() => setIsBookDialogOpen(true)}
-                    className="h-20 flex-col gap-2 text-lg"
+                    className="h-16 sm:h-20 flex-col gap-2 text-base sm:text-lg w-full"
                   >
-                    <Plus className="h-6 w-6" />
+                    <Plus className="h-5 w-5 sm:h-6 sm:w-6" />
                     Tambah Buku
                   </Button>
                   <Button
                     onClick={() => setIsBorrowDialogOpen(true)}
                     variant="secondary"
-                    className="h-20 flex-col gap-2 text-lg"
+                    className="h-16 sm:h-20 flex-col gap-2 text-base sm:text-lg w-full"
                   >
-                    <Plus className="h-6 w-6" />
+                    <Plus className="h-5 w-5 sm:h-6 sm:w-6" />
                     Peminjaman Baru
                   </Button>
                   <Button
                     onClick={() => setIsMemberDialogOpen(true)}
                     variant="outline"
-                    className="h-20 flex-col gap-2 text-lg"
+                    className="h-16 sm:h-20 flex-col gap-2 text-base sm:text-lg w-full"
                   >
-                    <Plus className="h-6 w-6" />
+                    <Plus className="h-5 w-5 sm:h-6 sm:w-6" />
                     Tambah Anggota
                   </Button>
                 </div>
@@ -872,7 +852,7 @@ export default function LibraryManagement() {
                     Tambah Buku
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full">
                   <DialogHeader>
                     <DialogTitle>{editingBook ? 'Edit Buku' : 'Tambah Buku Baru'}</DialogTitle>
                     <DialogDescription>Isi informasi buku yang akan ditambahkan ke perpustakaan</DialogDescription>
@@ -955,34 +935,36 @@ export default function LibraryManagement() {
 
             <Card>
               <CardContent className="p-0">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Judul</TableHead>
-                      <TableHead>Penulis</TableHead>
-                      <TableHead>Kategori</TableHead>
-                      <TableHead>Stok</TableHead>
-                      <TableHead>Tersedia</TableHead>
-                      <TableHead>Aksi</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredBooks.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={6} className="text-center text-muted-foreground">
-                          Tidak ada buku ditemukan
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      filteredBooks.map((book) => (
-                        <TableRow key={book.id}>
-                          <TableCell className="font-medium">{book.title}</TableCell>
-                          <TableCell>{book.author}</TableCell>
-                          <TableCell>
-                            <Badge variant="secondary">{book.category}</Badge>
-                          </TableCell>
-                          <TableCell>{book.stock}</TableCell>
-                          <TableCell>
+                <div className="overflow-x-auto">
+                  <div className="min-w-[600px]">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Judul</TableHead>
+                          <TableHead>Penulis</TableHead>
+                          <TableHead>Kategori</TableHead>
+                          <TableHead>Stok</TableHead>
+                          <TableHead>Tersedia</TableHead>
+                          <TableHead>Aksi</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredBooks.length === 0 ? (
+                          <TableRow>
+                            <TableCell colSpan={6} className="text-center text-muted-foreground">
+                              Tidak ada buku ditemukan
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          filteredBooks.map((book) => (
+                            <TableRow key={book.id}>
+                              <TableCell className="font-medium">{book.title}</TableCell>
+                              <TableCell>{book.author}</TableCell>
+                              <TableCell>
+                                <Badge variant="secondary">{book.category}</Badge>
+                              </TableCell>
+                              <TableCell>{book.stock}</TableCell>
+                              <TableCell>
                             <Badge variant={book.available > 0 ? 'default' : 'destructive'}>
                               {book.available}
                             </Badge>
@@ -1014,6 +996,8 @@ export default function LibraryManagement() {
                     )}
                   </TableBody>
                 </Table>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -1321,7 +1305,7 @@ export default function LibraryManagement() {
                     Tambah E-book
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-2xl">
+                <DialogContent className="max-w-2xl w-[95vw] sm:w-full">
                   <DialogHeader>
                     <DialogTitle>Upload E-book Baru</DialogTitle>
                     <DialogDescription>Upload file PDF untuk ditambahkan sebagai e-book</DialogDescription>
@@ -1629,7 +1613,7 @@ export default function LibraryManagement() {
 
       {/* E-book Viewer Dialog */}
       <Dialog open={!!readingEbook} onOpenChange={() => setReadingEbook(null)}>
-        <DialogContent className="max-w-6xl h-[80vh]">
+        <DialogContent className="max-w-6xl h-[80vh] w-[95vw] sm:w-full">
           <DialogHeader>
             <DialogTitle>{readingEbook?.title}</DialogTitle>
             <DialogDescription>{readingEbook?.author}</DialogDescription>

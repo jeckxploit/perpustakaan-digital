@@ -46,14 +46,14 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted p-4 sm:p-6">
       <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
+        <CardHeader className="space-y-1 pb-4">
           <div className="flex items-center justify-center space-x-2">
-            <BookOpen className="h-8 w-8 text-primary" />
+            <BookOpen className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
             <div>
-              <CardTitle className="text-2xl font-bold">Perpustakaan Digital</CardTitle>
-              <CardDescription>Sistem Manajemen Perpustakaan</CardDescription>
+              <CardTitle className="text-xl sm:text-2xl font-bold text-center">Perpustakaan Digital</CardTitle>
+              <CardDescription className="text-center">Sistem Manajemen Perpustakaan</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -70,6 +70,7 @@ export default function LoginPage() {
                 disabled={isLoading}
                 required
                 autoComplete="email"
+                className="h-11"
               />
             </div>
             <div className="space-y-2">
@@ -83,19 +84,20 @@ export default function LoginPage() {
                 disabled={isLoading}
                 required
                 autoComplete="current-password"
+                className="h-11"
               />
             </div>
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full h-11" disabled={isLoading}>
               {isLoading ? 'Memproses...' : 'Masuk'}
             </Button>
           </form>
-          
+
           <div className="mt-6 p-4 bg-muted rounded-lg space-y-2">
             <div className="flex items-start space-x-2">
-              <Lock className="h-4 w-4 text-muted-foreground mt-0.5" />
+              <Lock className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
               <div className="space-y-1">
                 <p className="text-sm font-medium">Akun Default:</p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground break-all">
                   Email: admin@library.com
                 </p>
                 <p className="text-sm text-muted-foreground">

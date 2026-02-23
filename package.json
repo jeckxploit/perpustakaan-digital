@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000 2>&1 | tee dev.log",
-    "build": "next build && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/",
+    "build": "next build",
+    "build:standalone": "npm run build && xcopy /E /I .next\\static .next\\standalone\\.next\\static && xcopy /E /I public .next\\standalone\\public",
     "start": "NODE_ENV=production bun .next/standalone/server.js 2>&1 | tee server.log",
     "lint": "eslint .",
     "db:push": "prisma db push",
@@ -62,6 +63,7 @@
     "next": "^16.1.1",
     "next-auth": "^4.24.11",
     "next-intl": "^4.3.4",
+    "next-pwa": "^5.6.0",
     "next-themes": "^0.4.6",
     "prisma": "^6.11.1",
     "react": "^19.0.0",
@@ -78,6 +80,7 @@
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.1.0",
     "vaul": "^1.1.2",
+    "workbox-webpack-plugin": "^7.4.0",
     "z-ai-web-dev-sdk": "^0.0.16",
     "zod": "^4.0.2",
     "zustand": "^5.0.6"
