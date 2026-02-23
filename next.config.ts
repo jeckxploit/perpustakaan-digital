@@ -67,6 +67,8 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  // Turbopack config for Next.js 16+
+  turbopack: {},
   // Use webpack for PWA compatibility
   webpack: (config, { isServer }) => {
     return config;
