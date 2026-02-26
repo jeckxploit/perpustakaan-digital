@@ -490,9 +490,10 @@ export default function LibraryManagement() {
       {/* Main Content */}
       <main className="flex-1 container mx-auto px-4 sm:px-6 py-4 sm:py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-8">
-          {/* Tab Navigation - Mobile Horizontal Scroll */}
+          {/* Tab Navigation - Modern Professional Design */}
           <TabsList className="w-full bg-transparent p-0 h-auto">
-            <div className="flex items-center gap-2 bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-1.5 overflow-x-auto mobile-only">
+            {/* Mobile Tab Navigation */}
+            <div className="flex items-center gap-1.5 bg-gradient-to-r from-neutral-100/80 via-neutral-100/50 to-neutral-100/80 dark:from-neutral-800/80 dark:via-neutral-800/50 dark:to-neutral-800/80 backdrop-blur-sm border border-neutral-200/50 dark:border-neutral-700/50 rounded-xl p-1.5 overflow-x-auto mobile-only shadow-sm">
               {[
                 { value: 'dashboard', label: 'Beranda', icon: LayoutDashboard },
                 { value: 'books', label: 'Buku', icon: Book },
@@ -504,19 +505,22 @@ export default function LibraryManagement() {
                 <TabsTrigger
                   key={tab.value}
                   value={tab.value}
-                  className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-md transition-all duration-200 text-xs font-medium whitespace-nowrap min-h-[40px] min-w-[44px] ${
+                  className={`relative flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-lg transition-all duration-300 text-xs font-semibold whitespace-nowrap min-h-[42px] min-w-[46px] overflow-hidden ${
                     activeTab === tab.value
-                      ? 'bg-blue-600 text-white shadow-md'
-                      : 'bg-transparent text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
+                      ? 'text-white shadow-lg'
+                      : 'text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/60 dark:hover:bg-neutral-700/60'
                   }`}
                 >
-                  <tab.icon className="h-4 w-4" />
-                  <span>{tab.label}</span>
+                  {activeTab === tab.value && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg" />
+                  )}
+                  <tab.icon className={`h-4 w-4 relative z-10 ${activeTab === tab.value ? 'scale-110' : ''} transition-transform duration-300`} />
+                  <span className="relative z-10">{tab.label}</span>
                 </TabsTrigger>
               ))}
             </div>
             {/* Desktop Tab Navigation */}
-            <div className="hidden sm:flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg p-1 overflow-x-auto">
+            <div className="hidden sm:flex items-center gap-1.5 bg-gradient-to-r from-neutral-100/80 via-neutral-100/50 to-neutral-100/80 dark:from-neutral-800/80 dark:via-neutral-800/50 dark:to-neutral-800/80 backdrop-blur-sm border border-neutral-200/50 dark:border-neutral-700/50 rounded-xl p-1.5 overflow-x-auto shadow-sm">
               {[
                 { value: 'dashboard', label: 'Beranda', icon: LayoutDashboard },
                 { value: 'books', label: 'Buku', icon: Book },
@@ -524,18 +528,25 @@ export default function LibraryManagement() {
                 { value: 'borrowings', label: 'Peminjaman', icon: Calendar },
                 { value: 'ebooks', label: 'E-book', icon: FileText },
                 { value: 'reports', label: 'Laporan', icon: BarChart3 },
-              ].map((tab) => (
+              ].map((tab, index) => (
                 <TabsTrigger
                   key={tab.value}
                   value={tab.value}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium whitespace-nowrap ${
+                  className={`relative flex items-center gap-2.5 px-5 py-3 rounded-lg transition-all duration-300 text-sm font-semibold whitespace-nowrap overflow-hidden group ${
                     activeTab === tab.value
-                      ? 'bg-blue-600 text-white shadow-md'
-                      : 'bg-transparent text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700'
+                      ? 'text-white shadow-lg'
+                      : 'text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/60 dark:hover:bg-neutral-700/60'
                   }`}
                 >
-                  <tab.icon className="h-4 w-4" />
-                  <span>{tab.label}</span>
+                  {activeTab === tab.value && (
+                    <motion.div
+                      layoutId="desktopTabIndicator"
+                      className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-md"
+                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                    />
+                  )}
+                  <tab.icon className={`h-4.5 w-4.5 relative z-10 transition-all duration-300 ${activeTab === tab.value ? 'scale-110' : 'group-hover:scale-110'}`} />
+                  <span className="relative z-10">{tab.label}</span>
                 </TabsTrigger>
               ))}
             </div>

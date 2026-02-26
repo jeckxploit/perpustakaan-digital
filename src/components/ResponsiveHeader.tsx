@@ -1,163 +1,237 @@
 'use client'
 
-import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { BookOpen, Moon, Sun, LogOut, Menu, X } from 'lucide-react'
+import { BookOpen, Moon, Sun, LogOut, Home, Book, Users, Calendar, FileText, BarChart3 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useAuth } from '@/contexts/AuthContext'
 import { cn } from '@/lib/utils'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface HeaderProps {
   activeTab?: string
   onTabChange?: (tab: string) => void
 }
 
+const navItems = [
+  { value: 'dashboard', label: 'Beranda', icon: Home },
+  { value: 'books', label: 'Buku', icon: Book },
+  { value: 'members', label: 'Anggota', icon: Users },
+  { value: 'borrowings', label: 'Peminjaman', icon: Calendar },
+  { value: 'ebooks', label: 'E-book', icon: FileText },
+  { value: 'reports', label: 'Laporan', icon: BarChart3 },
+]
+
 export function ResponsiveHeader({ activeTab, onTabChange }: HeaderProps) {
   const { theme, setTheme } = useTheme()
   const { admin, logout } = useAuth()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
-  const navItems = [
-    { value: 'dashboard', label: 'Beranda', icon: BookOpen },
-    { value: 'books', label: 'Buku', icon: BookOpen },
-    { value: 'members', label: 'Anggota', icon: BookOpen },
-    { value: 'borrowings', label: 'Peminjaman', icon: BookOpen },
-    { value: 'ebooks', label: 'E-book', icon: BookOpen },
-    { value: 'reports', label: 'Laporan', icon: BookOpen },
-  ]
 
   const handleNavClick = (value: string) => {
     onTabChange?.(value)
-    setMobileMenuOpen(false)
   }
 
   return (
     <>
       {/* Desktop Header */}
-      <header className="sticky top-0 z-50 border-b border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md desktop-only">
-        <div className="container mx-auto px-4 sm:px-6 py-4">
+      <header className="sticky top-0 z-50 border-b border-neutral-200/50 dark:border-neutral-800/50 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-xl desktop-only shadow-sm">
+        {/* Gradient accent line */}
+        <div className="h-0.5 bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500" />
+        
+        <div className="container mx-auto px-4 sm:px-6 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <BookOpen className="h-7 w-7 text-blue-600 dark:text-blue-400" />
+            {/* Logo Section */}
+            <motion.div 
+              className="flex items-center gap-3"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl blur-lg opacity-30" />
+                <div className="relative h-10 w-10 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-lg">
+                  <BookOpen className="h-5 w-5 text-white" />
+                </div>
+              </div>
               <div>
-                <h1 className="text-base sm:text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-                  Perpustakaan Digital
+                <h1 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  PerpusDigital
                 </h1>
-                <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 hidden md:block">
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 font-medium">
                   Sistem Manajemen Perpustakaan
                 </p>
               </div>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="hidden lg:flex items-center gap-2 text-sm border-l-2 border-neutral-300 dark:border-neutral-700 pl-3">
-                <span className="text-neutral-700 dark:text-neutral-300 font-medium truncate max-w-[150px]">
-                  {admin?.name}
-                </span>
-                <span className="px-2 sm:px-3 py-1 bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 text-xs font-medium uppercase rounded whitespace-nowrap">
-                  {admin?.role}
-                </span>
+            </motion.div>
+
+            {/* Navigation */}
+            <nav className="hidden lg:flex items-center gap-1.5 bg-neutral-100/80 dark:bg-neutral-800/80 backdrop-blur-sm rounded-xl p-1.5 border border-neutral-200/50 dark:border-neutral-700/50">
+              {navItems.map((item, index) => {
+                const isActive = activeTab === item.value
+                const Icon = item.icon
+                
+                return (
+                  <motion.button
+                    key={item.value}
+                    onClick={() => handleNavClick(item.value)}
+                    className={cn(
+                      "relative flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-300",
+                      isActive
+                        ? "text-white"
+                        : "text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/50 dark:hover:bg-neutral-700/50"
+                    )}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05, duration: 0.3 }}
+                  >
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeNavIndicator"
+                        className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-md"
+                        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                      />
+                    )}
+                    <span className="relative flex items-center gap-2">
+                      <Icon className={cn("h-4 w-4 transition-transform duration-300", isActive && "scale-110")} />
+                      {item.label}
+                    </span>
+                  </motion.button>
+                )
+              })}
+            </nav>
+
+            {/* Right Actions */}
+            <div className="flex items-center gap-2">
+              {/* User Info Badge */}
+              <div className="hidden xl:flex items-center gap-2.5 px-3 py-2 rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200/50 dark:border-blue-800/50">
+                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
+                  <span className="text-sm font-bold text-white">
+                    {admin?.name?.charAt(0) || 'A'}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">
+                    {admin?.name}
+                  </span>
+                  <span className="text-[10px] font-medium text-blue-600 dark:text-blue-400 uppercase tracking-wide">
+                    {admin?.role}
+                  </span>
+                </div>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className="h-10 w-10 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+
+              {/* Theme Toggle */}
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
               >
-                <Sun className="h-5 w-5 dark:hidden" />
-                <Moon className="h-5 w-5 hidden dark:block" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => logout()}
-                className="h-10 w-10 hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400"
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="h-10 w-10 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all duration-300"
+                >
+                  <AnimatePresence mode="wait">
+                    {theme === 'dark' ? (
+                      <motion.div
+                        key="moon"
+                        initial={{ rotate: -90, opacity: 0 }}
+                        animate={{ rotate: 0, opacity: 1 }}
+                        exit={{ rotate: 90, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <Moon className="h-5 w-5 text-blue-400" />
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="sun"
+                        initial={{ rotate: 90, opacity: 0 }}
+                        animate={{ rotate: 0, opacity: 1 }}
+                        exit={{ rotate: -90, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <Sun className="h-5 w-5 text-amber-500" />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </Button>
+              </motion.div>
+
+              {/* Logout Button */}
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
               >
-                <LogOut className="h-5 w-5" />
-              </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => logout()}
+                  className="h-10 w-10 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 dark:text-red-400 transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20"
+                >
+                  <LogOut className="h-5 w-5" />
+                </Button>
+              </motion.div>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Mobile Header */}
-      <header className="sticky top-0 z-50 border-b border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md mobile-only">
-        <div className="container mx-auto px-4 py-3">
+      {/* Mobile Header - Simplified (navigation moved to bottom) */}
+      <header className="sticky top-0 z-50 border-b border-neutral-200/50 dark:border-neutral-800/50 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-xl mobile-only shadow-sm">
+        {/* Gradient accent line */}
+        <div className="h-0.5 bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500" />
+
+        <div className="container mx-auto px-4 py-2.5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <BookOpen className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            {/* Logo */}
+            <motion.div
+              className="flex items-center gap-2.5"
+              whileHover={{ scale: 1.02 }}
+            >
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg blur-md opacity-30" />
+                <div className="relative h-9 w-9 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-md">
+                  <BookOpen className="h-4 w-4 text-white" />
+                </div>
+              </div>
               <div>
-                <h1 className="text-base font-semibold text-neutral-900 dark:text-neutral-100">
+                <h1 className="text-base font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   PerpusDigital
                 </h1>
               </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className="h-9 w-9"
+            </motion.div>
+
+            {/* Actions - Theme toggle only */}
+            <div className="flex items-center gap-1.5">
+              <motion.div
+                whileTap={{ scale: 0.9 }}
               >
-                <Sun className="h-4 w-4 dark:hidden" />
-                <Moon className="h-4 w-4 hidden dark:block" />
-              </Button>
-              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-                <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-9 w-9">
-                    <Menu className="h-5 w-5" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="right" className="w-[280px] sm:w-[350px] p-0">
-                  <SheetHeader className="border-b border-neutral-200 dark:border-neutral-800 pb-4 px-6 pt-6">
-                    <SheetTitle className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
-                        <span className="text-lg font-bold text-blue-600 dark:text-blue-400">
-                          {admin?.name?.charAt(0) || 'A'}
-                        </span>
-                      </div>
-                      <div className="text-left">
-                        <p className="text-base font-semibold">{admin?.name}</p>
-                        <p className="text-xs text-neutral-500">{admin?.role}</p>
-                      </div>
-                    </SheetTitle>
-                  </SheetHeader>
-                  <nav className="py-4 px-2">
-                    {[
-                      { value: 'dashboard', label: 'Beranda', icon: BookOpen },
-                      { value: 'books', label: 'Buku', icon: BookOpen },
-                      { value: 'members', label: 'Anggota', icon: BookOpen },
-                      { value: 'borrowings', label: 'Peminjaman', icon: BookOpen },
-                      { value: 'ebooks', label: 'E-book', icon: BookOpen },
-                      { value: 'reports', label: 'Laporan', icon: BookOpen },
-                    ].map((item) => (
-                      <button
-                        key={item.value}
-                        onClick={() => handleNavClick(item.value)}
-                        className={cn(
-                          "w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors mb-1",
-                          activeTab === item.value
-                            ? "bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300"
-                            : "text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                        )}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="h-9 w-9 rounded-lg"
+                >
+                  <AnimatePresence mode="wait">
+                    {theme === 'dark' ? (
+                      <motion.div
+                        key="moon"
+                        initial={{ rotate: -90, opacity: 0 }}
+                        animate={{ rotate: 0, opacity: 1 }}
+                        exit={{ rotate: 90, opacity: 0 }}
                       >
-                        <item.icon className="h-5 w-5" />
-                        {item.label}
-                      </button>
-                    ))}
-                  </nav>
-                  <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-neutral-200 dark:border-neutral-800 bg-background">
-                    <Button
-                      onClick={() => logout()}
-                      variant="outline"
-                      className="w-full justify-start gap-3 text-red-600 dark:text-red-400 border-red-200 dark:border-red-800 hover:bg-red-50 dark:hover:bg-red-900/20"
-                    >
-                      <LogOut className="h-5 w-5" />
-                      Logout
-                    </Button>
-                  </div>
-                </SheetContent>
-              </Sheet>
+                        <Moon className="h-4 w-4 text-blue-400" />
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="sun"
+                        initial={{ rotate: 90, opacity: 0 }}
+                        animate={{ rotate: 0, opacity: 1 }}
+                        exit={{ rotate: -90, opacity: 0 }}
+                      >
+                        <Sun className="h-4 w-4 text-amber-500" />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </Button>
+              </motion.div>
             </div>
           </div>
         </div>
