@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { BookOpen, Moon, Sun, LogOut, Home, Book, Users, Calendar, FileText, BarChart3, Download } from 'lucide-react'
+import { BookOpen, Moon, Sun, LogOut, Home, Book, Users, Calendar, FileText, BarChart3 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useAuth } from '@/contexts/AuthContext'
 import { cn } from '@/lib/utils'
@@ -27,18 +27,6 @@ export function ResponsiveHeader({ activeTab, onTabChange }: HeaderProps) {
 
   const handleNavClick = (value: string) => {
     onTabChange?.(value)
-  }
-
-  const handleInstallClick = () => {
-    // Try to trigger PWA install
-    const installEvent = new CustomEvent('pwa-install-request')
-    window.dispatchEvent(installEvent)
-    
-    // Also try to click the hidden trigger button if it exists
-    const triggerButton = document.getElementById('pwa-install-trigger')
-    if (triggerButton) {
-      triggerButton.click()
-    }
   }
 
   return (
@@ -210,21 +198,8 @@ export function ResponsiveHeader({ activeTab, onTabChange }: HeaderProps) {
               </div>
             </motion.div>
 
-            {/* Actions - Theme toggle + Install */}
+            {/* Actions - Theme toggle */}
             <div className="flex items-center gap-1.5">
-              {/* Install Button - Mobile */}
-              <motion.div whileTap={{ scale: 0.9 }}>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleInstallClick}
-                  className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                  title="Install App"
-                >
-                  <Download className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
-                </Button>
-              </motion.div>
-
               {/* Theme Toggle */}
               <motion.div
                 whileTap={{ scale: 0.9 }}
