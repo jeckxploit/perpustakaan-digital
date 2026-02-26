@@ -5,7 +5,7 @@ import { BookOpen, Moon, Sun, LogOut, Home, Book, Users, Calendar, FileText, Bar
 import { useTheme } from 'next-themes'
 import { useAuth } from '@/contexts/AuthContext'
 import { cn } from '@/lib/utils'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface HeaderProps {
   activeTab?: string
