@@ -31,8 +31,8 @@ export function ResponsiveHeader({ activeTab, onTabChange }: HeaderProps) {
 
   return (
     <>
-      {/* Desktop Header */}
-      <header className="sticky top-0 z-50 border-b border-neutral-200/50 dark:border-neutral-800/50 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-xl desktop-only shadow-sm">
+      {/* Desktop Header - lg and above */}
+      <header className="sticky top-0 z-50 border-b border-neutral-200/50 dark:border-neutral-800/50 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-xl hidden lg:block shadow-sm">
         {/* Gradient accent line */}
         <div className="h-0.5 bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500" />
         
@@ -61,7 +61,7 @@ export function ResponsiveHeader({ activeTab, onTabChange }: HeaderProps) {
             </motion.div>
 
             {/* Navigation */}
-            <nav className="hidden lg:flex items-center gap-1.5 bg-neutral-100/80 dark:bg-neutral-800/80 backdrop-blur-sm rounded-xl p-1.5 border border-neutral-200/50 dark:border-neutral-700/50">
+            <nav className="flex items-center gap-1.5 bg-neutral-100/80 dark:bg-neutral-800/80 backdrop-blur-sm rounded-xl p-1.5 border border-neutral-200/50 dark:border-neutral-700/50">
               {navItems.map((item, index) => {
                 const isActive = activeTab === item.value
                 const Icon = item.icon
@@ -173,26 +173,26 @@ export function ResponsiveHeader({ activeTab, onTabChange }: HeaderProps) {
         </div>
       </header>
 
-      {/* Mobile Header - Simplified (navigation moved to bottom) */}
-      <header className="sticky top-0 z-50 border-b border-neutral-200/50 dark:border-neutral-800/50 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-xl mobile-only shadow-sm">
+      {/* Mobile & Tablet Header - Below lg */}
+      <header className="sticky top-0 z-50 border-b border-neutral-200/50 dark:border-neutral-800/50 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-xl lg:hidden shadow-sm">
         {/* Gradient accent line */}
         <div className="h-0.5 bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500" />
 
-        <div className="container mx-auto px-4 py-2.5">
+        <div className="container mx-auto px-3 sm:px-4 py-2.5">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <motion.div
-              className="flex items-center gap-2.5"
+              className="flex items-center gap-2 sm:gap-2.5"
               whileHover={{ scale: 1.02 }}
             >
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg blur-md opacity-30" />
-                <div className="relative h-9 w-9 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-md">
-                  <BookOpen className="h-4 w-4 text-white" />
+                <div className="relative h-8 w-8 sm:h-9 sm:w-9 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-md">
+                  <BookOpen className="h-4 w-4 sm:h-4.5 sm:w-4.5 text-white" />
                 </div>
               </div>
               <div>
-                <h1 className="text-base font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <h1 className="text-sm sm:text-base font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   PerpusDigital
                 </h1>
               </div>
@@ -207,7 +207,7 @@ export function ResponsiveHeader({ activeTab, onTabChange }: HeaderProps) {
                   variant="ghost"
                   size="icon"
                   onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  className="h-9 w-9 rounded-lg"
+                  className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg"
                 >
                   <AnimatePresence mode="wait">
                     {theme === 'dark' ? (
@@ -217,7 +217,7 @@ export function ResponsiveHeader({ activeTab, onTabChange }: HeaderProps) {
                         animate={{ rotate: 0, opacity: 1 }}
                         exit={{ rotate: 90, opacity: 0 }}
                       >
-                        <Moon className="h-4 w-4 text-blue-400" />
+                        <Moon className="h-4 w-4 sm:h-4.5 sm:w-4.5 text-blue-400" />
                       </motion.div>
                     ) : (
                       <motion.div
@@ -226,7 +226,7 @@ export function ResponsiveHeader({ activeTab, onTabChange }: HeaderProps) {
                         animate={{ rotate: 0, opacity: 1 }}
                         exit={{ rotate: -90, opacity: 0 }}
                       >
-                        <Sun className="h-4 w-4 text-amber-500" />
+                        <Sun className="h-4 w-4 sm:h-4.5 sm:w-4.5 text-amber-500" />
                       </motion.div>
                     )}
                   </AnimatePresence>

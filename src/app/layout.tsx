@@ -50,10 +50,12 @@ export const viewport = {
   minimumScale: 1,
   userScalable: false,
   viewportFit: "cover",
+  interactiveWidget: "resizes-visual",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#3b82f6" },
     { media: "(prefers-color-scheme: dark)", color: "#1e3a5f" },
   ],
+  colorScheme: "light dark",
 };
 
 export default function RootLayout({

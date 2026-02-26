@@ -28,6 +28,7 @@ import { ProfessionalStatCard } from '@/components/professional/ProfessionalStat
 import { ProfessionalEmptyState } from '@/components/professional/ProfessionalEmptyState'
 import { ProfessionalSkeleton } from '@/components/professional/ProfessionalSkeleton'
 import { ResponsiveHeader } from '@/components/ResponsiveHeader'
+import { PWAInstallPrompt } from '@/components/PWAInstallPrompt'
 
 // Types
 interface Book {
@@ -1612,9 +1613,11 @@ export default function LibraryManagement() {
         </DialogContent>
       </Dialog>
 
-      {/* Mobile Bottom Navigation */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border p-2 z-50">
-        <div className="flex justify-around">
+      {/* Mobile Bottom Navigation - Optimized for PWA */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-lg border-t border-border z-50 safe-pb-nav">
+        {/* Safe area for iOS home indicator */}
+        <div className="h-[env(safe-area-inset-bottom,0px)] bg-background/95" />
+        <div className="flex justify-around items-center px-1 pb-2">
           {[
             { value: 'dashboard', label: 'Beranda', icon: LayoutDashboard },
             { value: 'books', label: 'Buku', icon: BookOpen },
@@ -1622,22 +1625,34 @@ export default function LibraryManagement() {
             { value: 'borrowings', label: 'Pinjam', icon: Calendar },
             { value: 'ebooks', label: 'E-book', icon: FileText },
             { value: 'reports', label: 'Laporan', icon: BarChart3 },
-          ].map((item) => (
-            <button
-              key={item.value}
-              onClick={() => setActiveTab(item.value)}
-              className={`flex flex-col items-center p-2 rounded-lg transition-colors ${
-                activeTab === item.value
-                  ? 'text-primary bg-primary/10'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              <item.icon className="h-5 w-5" />
-              <span className="text-xs mt-1">{item.label}</span>
-            </button>
-          ))}
+          ].map((item) => {
+            const isActive = activeTab === item.value
+            return (
+              <button
+                key={item.value}
+                onClick={() => setActiveTab(item.value)}
+                className={`flex flex-col items-center justify-center p-2 min-w-[56px] rounded-xl transition-all duration-300 touch-target ${
+                  isActive
+                    ? 'text-blue-600 dark:text-blue-400'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <div className={`relative p-1.5 rounded-lg transition-all duration-300 ${
+                  isActive ? 'bg-blue-100 dark:bg-blue-900/30' : ''
+                }`}>
+                  <item.icon className={`h-5 w-5 ${isActive ? 'scale-110' : ''} transition-transform duration-300`} />
+                </div>
+                <span className={`text-[10px] font-medium mt-0.5 ${isActive ? 'text-blue-600 dark:text-blue-400' : ''}`}>
+                  {item.label}
+                </span>
+              </button>
+            )
+          })}
         </div>
-      </div>
+      </nav>
+
+      {/* PWA Install Prompt */}
+      <PWAInstallPrompt />
     </div>
   )
 }
