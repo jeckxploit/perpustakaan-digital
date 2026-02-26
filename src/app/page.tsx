@@ -490,35 +490,8 @@ export default function LibraryManagement() {
       {/* Main Content */}
       <main className="flex-1 container mx-auto px-4 sm:px-6 py-4 sm:py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-8">
-          {/* Tab Navigation - Modern Professional Design */}
+          {/* Tab Navigation - Desktop Only */}
           <TabsList className="w-full bg-transparent p-0 h-auto">
-            {/* Mobile Tab Navigation */}
-            <div className="flex items-center gap-1.5 bg-gradient-to-r from-neutral-100/80 via-neutral-100/50 to-neutral-100/80 dark:from-neutral-800/80 dark:via-neutral-800/50 dark:to-neutral-800/80 backdrop-blur-sm border border-neutral-200/50 dark:border-neutral-700/50 rounded-xl p-1.5 overflow-x-auto mobile-only shadow-sm">
-              {[
-                { value: 'dashboard', label: 'Beranda', icon: LayoutDashboard },
-                { value: 'books', label: 'Buku', icon: Book },
-                { value: 'members', label: 'Anggota', icon: Users },
-                { value: 'borrowings', label: 'Peminjaman', icon: Calendar },
-                { value: 'ebooks', label: 'E-book', icon: FileText },
-                { value: 'reports', label: 'Laporan', icon: BarChart3 },
-              ].map((tab) => (
-                <TabsTrigger
-                  key={tab.value}
-                  value={tab.value}
-                  className={`relative flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-lg transition-all duration-300 text-xs font-semibold whitespace-nowrap min-h-[42px] min-w-[46px] overflow-hidden ${
-                    activeTab === tab.value
-                      ? 'text-white shadow-lg'
-                      : 'text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/60 dark:hover:bg-neutral-700/60'
-                  }`}
-                >
-                  {activeTab === tab.value && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg" />
-                  )}
-                  <tab.icon className={`h-4 w-4 relative z-10 ${activeTab === tab.value ? 'scale-110' : ''} transition-transform duration-300`} />
-                  <span className="relative z-10">{tab.label}</span>
-                </TabsTrigger>
-              ))}
-            </div>
             {/* Desktop Tab Navigation */}
             <div className="hidden sm:flex items-center gap-1.5 bg-gradient-to-r from-neutral-100/80 via-neutral-100/50 to-neutral-100/80 dark:from-neutral-800/80 dark:via-neutral-800/50 dark:to-neutral-800/80 backdrop-blur-sm border border-neutral-200/50 dark:border-neutral-700/50 rounded-xl p-1.5 overflow-x-auto shadow-sm">
               {[
