@@ -16,18 +16,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Perpustakaan Digital - Sistem Manajemen Perpustakaan",
-  description: "Platform manajemen perpustakaan digital modern dengan fitur lengkap untuk pengelolaan buku, anggota, peminjaman, dan e-book.",
-  keywords: ["Perpustakaan", "Digital Library", "Sistem Perpustakaan", "E-book", "Peminjaman Buku"],
-  authors: [{ name: "Z.ai" }],
+  title: "Perpustakaan Digital",
+  description: "Platform manajemen perpustakaan digital modern",
+  keywords: ["Perpustakaan", "Digital Library", "Sistem Perpustakaan", "E-book"],
+  authors: [{ name: "PerpusDigital" }],
   manifest: "/manifest.json",
   icons: {
     icon: [
-      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icons/icon-512x512.png", sizes: "512x512", type: "image/png" },
+      { url: "/icons/icon-192x192.svg", sizes: "192x192", type: "image/svg+xml" },
+      { url: "/icons/icon-512x512.svg", sizes: "512x512", type: "image/svg+xml" },
     ],
     apple: [
-      { url: "/icons/icon-192x192.png", sizes: "180x180", type: "image/png" },
+      { url: "/icons/icon-192x192.svg", sizes: "180x180", type: "image/svg+xml" },
     ],
   },
   appleWebApp: {
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     title: "PerpusDigital",
   },
   openGraph: {
-    title: "Sistem Manajemen Perpustakaan Digital",
+    title: "Perpustakaan Digital",
     description: "Platform manajemen perpustakaan digital modern",
     siteName: "Perpustakaan Digital",
     type: "website",
@@ -73,7 +73,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="PerpusDigital" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="msapplication-tap-highlight" content="no" />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.svg" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
