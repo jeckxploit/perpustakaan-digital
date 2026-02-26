@@ -28,7 +28,7 @@ import { ProfessionalStatCard } from '@/components/professional/ProfessionalStat
 import { ProfessionalEmptyState } from '@/components/professional/ProfessionalEmptyState'
 import { ProfessionalSkeleton } from '@/components/professional/ProfessionalSkeleton'
 import { ResponsiveHeader } from '@/components/ResponsiveHeader'
-import { PWAInstallPrompt } from '@/components/PWAInstallPrompt'
+import { PWAInstallButton } from '@/components/PWAInstallButton'
 
 // Types
 interface Book {
@@ -1651,8 +1651,8 @@ export default function LibraryManagement() {
         </div>
       </nav>
 
-      {/* PWA Install Prompt */}
-      <PWAInstallPrompt />
+      {/* PWA Install Button */}
+      <PWAInstallButton />
     </div>
   )
 }

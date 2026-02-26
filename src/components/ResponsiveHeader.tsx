@@ -1,7 +1,8 @@
 'use client'
 
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { BookOpen, Moon, Sun, LogOut, Home, Book, Users, Calendar, FileText, BarChart3 } from 'lucide-react'
+import { BookOpen, Moon, Sun, LogOut, Home, Book, Users, Calendar, FileText, BarChart3, Download } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useAuth } from '@/contexts/AuthContext'
 import { cn } from '@/lib/utils'
@@ -24,9 +25,17 @@ const navItems = [
 export function ResponsiveHeader({ activeTab, onTabChange }: HeaderProps) {
   const { theme, setTheme } = useTheme()
   const { admin, logout } = useAuth()
+  const [showInstallButton, setShowInstallButton] = useState(false)
 
   const handleNavClick = (value: string) => {
     onTabChange?.(value)
+  }
+
+  const handleInstallClick = () => {
+    // Dispatch custom event for PWA install
+    window.dispatchEvent(new CustomEvent('pwa-install-request'))
+    setShowInstallButton(true)
+    setTimeout(() => setShowInstallButton(false), 3000)
   }
 
   return (
@@ -198,8 +207,34 @@ export function ResponsiveHeader({ activeTab, onTabChange }: HeaderProps) {
               </div>
             </motion.div>
 
-            {/* Actions - Theme toggle only */}
+            {/* Actions - Theme toggle + Install */}
             <div className="flex items-center gap-1.5">
+              {/* Install Button - Mobile */}
+              <motion.div whileTap={{ scale: 0.9 }} className="relative">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleInstallClick}
+                  className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg text-blue-600 dark:text-blue-400"
+                >
+                  <Download className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
+                </Button>
+                {/* Tooltip */}
+                <AnimatePresence>
+                  {showInstallButton && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute top-full right-0 mt-1 px-2 py-1 bg-popover text-popover-foreground text-xs rounded-md shadow-lg border border-border whitespace-nowrap z-50"
+                    >
+                      Install App
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+
+              {/* Theme Toggle */}
               <motion.div
                 whileTap={{ scale: 0.9 }}
               >
