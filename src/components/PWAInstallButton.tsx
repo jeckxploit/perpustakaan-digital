@@ -4,30 +4,63 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { X, Download, Smartphone, Share, Plus, Monitor, AlertCircle, Globe } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { usePWA } from '@/hooks/usePWA'
 
 export function PWAInstallButton() {
-  const { isInstalled, canInstall, install, hasPrompt } = usePWA()
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
   const [showInstructions, setShowInstructions] = useState(false)
   const [platform, setPlatform] = useState<'ios' | 'android' | 'desktop' | 'unknown'>('unknown')
+  const [isInstalled, setIsInstalled] = useState(false)
 
   useEffect(() => {
-    if (isInstalled) return
+    // Check if already installed
+    if (typeof window !== 'undefined') {
+      const installed = 
+        window.matchMedia('(display-mode: standalone)').matches ||
+        (window.navigator as any).standalone === true
+      
+      if (installed) {
+        setIsInstalled(true)
+        return
+      }
 
-    // Detect platform
-    const userAgent = navigator.userAgent.toLowerCase()
-    if (/ipad|iphone|ipod/.test(userAgent)) {
-      setPlatform('ios')
-    } else if (/android/.test(userAgent)) {
-      setPlatform('android')
-    } else if (/macos|windows|linux/.test(userAgent.toLowerCase())) {
-      setPlatform('desktop')
+      // Detect platform
+      const userAgent = navigator.userAgent.toLowerCase()
+      if (/ipad|iphone|ipod/.test(userAgent)) {
+        setPlatform('ios')
+      } else if (/android/.test(userAgent)) {
+        setPlatform('android')
+      } else if (/macos|windows|linux/.test(userAgent.toLowerCase())) {
+        setPlatform('desktop')
+      }
     }
-  }, [isInstalled])
+
+    // Listen for install prompt
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault()
+      setDeferredPrompt(e)
+    }
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    }
+  }, [])
 
   const handleInstallClick = () => {
-    if (canInstall && hasPrompt) {
-      install()
+    if (deferredPrompt) {
+      try {
+        deferredPrompt.prompt()
+        deferredPrompt.userChoice.then((choiceResult: any) => {
+          if (choiceResult.outcome === 'accepted') {
+            setIsInstalled(true)
+            setDeferredPrompt(null)
+          }
+        })
+      } catch (err) {
+        console.error('PWA install error:', err)
+        setShowInstructions(true)
+      }
     } else {
       setShowInstructions(true)
     }
@@ -77,7 +110,7 @@ export function PWAInstallButton() {
                   <ul className="text-xs text-amber-700 dark:text-amber-300 mt-1 space-y-1">
                     <li>• Website harus menggunakan HTTPS</li>
                     <li>• Atau localhost untuk development</li>
-                    <li>• Tidak bisa install dari IP address (192.168.x.x)</li>
+                    <li>• Tidak bisa install dari IP address</li>
                   </ul>
                 </div>
               </div>
@@ -94,15 +127,15 @@ export function PWAInstallButton() {
                   <div className="space-y-3">
                     <div className="flex items-start gap-3">
                       <span className="flex-shrink-0 h-6 w-6 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white">1</span>
-                      <p className="text-sm">Tap tombol <strong>Share</strong> <Share className="h-4 w-4 inline"/></p>
+                      <p className="text-sm">Tap tombol <strong>Share</strong></p>
                     </div>
                     <div className="flex items-start gap-3">
                       <span className="flex-shrink-0 h-6 w-6 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white">2</span>
-                      <p className="text-sm">Scroll ke bawah, tap <strong>"Add to Home Screen"</strong></p>
+                      <p className="text-sm">Scroll, tap <strong>"Add to Home Screen"</strong></p>
                     </div>
                     <div className="flex items-start gap-3">
                       <span className="flex-shrink-0 h-6 w-6 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white">3</span>
-                      <p className="text-sm">Tap <strong>"Add"</strong> di pojok kanan atas</p>
+                      <p className="text-sm">Tap <strong>"Add"</strong></p>
                     </div>
                   </div>
                 </div>
@@ -119,15 +152,15 @@ export function PWAInstallButton() {
                   <div className="space-y-3">
                     <div className="flex items-start gap-3">
                       <span className="flex-shrink-0 h-6 w-6 rounded-full bg-green-600 flex items-center justify-center text-xs font-bold text-white">1</span>
-                      <p className="text-sm">Tap menu <strong>⋮</strong> (titik tiga) di pojok kanan atas</p>
+                      <p className="text-sm">Tap menu <strong>⋮</strong></p>
                     </div>
                     <div className="flex items-start gap-3">
                       <span className="flex-shrink-0 h-6 w-6 rounded-full bg-green-600 flex items-center justify-center text-xs font-bold text-white">2</span>
-                      <p className="text-sm">Pilih <strong>"Install app"</strong> atau <strong>"Tambahkan ke Layar Utama"</strong></p>
+                      <p className="text-sm">Pilih <strong>"Install app"</strong></p>
                     </div>
                     <div className="flex items-start gap-3">
                       <span className="flex-shrink-0 h-6 w-6 rounded-full bg-green-600 flex items-center justify-center text-xs font-bold text-white">3</span>
-                      <p className="text-sm">Tap <strong>"Install"</strong> untuk konfirmasi</p>
+                      <p className="text-sm">Tap <strong>"Install"</strong></p>
                     </div>
                   </div>
                 </div>
@@ -144,11 +177,11 @@ export function PWAInstallButton() {
                   <div className="space-y-3">
                     <div className="flex items-start gap-3">
                       <span className="flex-shrink-0 h-6 w-6 rounded-full bg-purple-600 flex items-center justify-center text-xs font-bold text-white">1</span>
-                      <p className="text-sm">Lihat icon <Download className="h-4 w-4 inline"/> di kanan address bar</p>
+                      <p className="text-sm">Lihat icon <Download className="h-4 w-4 inline"/> di address bar</p>
                     </div>
                     <div className="flex items-start gap-3">
                       <span className="flex-shrink-0 h-6 w-6 rounded-full bg-purple-600 flex items-center justify-center text-xs font-bold text-white">2</span>
-                      <p className="text-sm">Tap icon tersebut, lalu <strong>"Install"</strong></p>
+                      <p className="text-sm">Tap <strong>"Install"</strong></p>
                     </div>
                   </div>
                 </div>
@@ -162,16 +195,10 @@ export function PWAInstallButton() {
                   Browser tidak mendukung
                 </p>
                 <p className="text-xs text-amber-700 dark:text-amber-300">
-                  Gunakan Chrome, Edge, atau Safari terbaru untuk menginstall aplikasi.
+                  Gunakan Chrome, Edge, atau Safari terbaru.
                 </p>
               </div>
             )}
-
-            <div className="mt-4 p-3 bg-neutral-50 dark:bg-neutral-900 rounded-xl">
-              <p className="text-xs text-muted-foreground text-center">
-                ✨ Aplikasi akan muncul di Home Screen setelah di-install
-              </p>
-            </div>
 
             <Button
               className="w-full mt-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
@@ -185,14 +212,13 @@ export function PWAInstallButton() {
     )
   }
 
-  // Hidden component - triggered by header button
+  // Hidden trigger button for header
   return (
     <button
       id="pwa-install-trigger"
       className="hidden"
       onClick={handleInstallClick}
       aria-label="Install PWA"
-      data-can-install={canInstall}
     />
   )
 }
